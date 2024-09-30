@@ -7,6 +7,8 @@ namespace Serenity
 {
     public class Game1 : Game
     {
+        Random random = new Random();
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -33,7 +35,7 @@ namespace Serenity
             camera = new Camera2D();
 
             // Gera o mapa
-            mapGenerator = new MapGenerator(126,126);
+            mapGenerator = new MapGenerator(2048,2048,random.Next());
             Tile[,] tiles = mapGenerator.GenerateMap();
 
             // Inicializa o renderizador do mapa
@@ -95,7 +97,7 @@ namespace Serenity
             if (scrollValue != previousScrollValue)
             {
                 camera.Zoom += (scrollValue - previousScrollValue) * 0.001f;
-                camera.Zoom = MathHelper.Clamp(camera.Zoom, 0.5f, 2f);
+                camera.Zoom = MathHelper.Clamp(camera.Zoom, 0.06f, 2f);
                 previousScrollValue = scrollValue;
             }
 
