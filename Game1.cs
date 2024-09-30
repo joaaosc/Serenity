@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Reflection.Emit;
 
 namespace Serenity
 {
@@ -31,12 +32,18 @@ namespace Serenity
 
         protected override void Initialize()
         {
+            graphics.PreferredBackBufferWidth = 800;  // Largura
+            graphics.PreferredBackBufferHeight = 600; // Altura
+            graphics.ApplyChanges();
+
             // Inicializa a câmera
             camera = new Camera2D();
 
             // Gera o mapa
-            mapGenerator = new MapGenerator(2048,2048,random.Next());
-            Tile[,] tiles = mapGenerator.GenerateMap();
+            mapGenerator = new MapGenerator(1024,512,random.Next());
+            Tile[,] tiles = mapGenerator.GenerateMap(TerrainGenerationType.DistributedContinents);
+     
+
 
             // Inicializa o renderizador do mapa
             mapRenderer = new MapRenderer(tiles);
@@ -97,7 +104,7 @@ namespace Serenity
             if (scrollValue != previousScrollValue)
             {
                 camera.Zoom += (scrollValue - previousScrollValue) * 0.001f;
-                camera.Zoom = MathHelper.Clamp(camera.Zoom, 0.06f, 2f);
+                camera.Zoom = MathHelper.Clamp(camera.Zoom, 0.02f, 2f);
                 previousScrollValue = scrollValue;
             }
 
