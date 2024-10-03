@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra;
+using Serenity.UI;
 using System;
-using System.Reflection.Emit;
+
 
 namespace Serenity
 {
@@ -20,6 +22,9 @@ namespace Serenity
         // Variáveis para controle de input
         Vector2 previousMousePosition;
         float previousScrollValue;
+
+
+        private UserInterface _userInterface;
 
 
         public Game1()
@@ -55,15 +60,30 @@ namespace Serenity
             Activated += OnActivated;
             Deactivated += OnDeactivated;
 
+
+            // Inicializa a interface de usuário
+            _userInterface = new UserInterface();
+            _userInterface.SetGame(this);
+
             base.Initialize();
         }
+
+
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // Defina a instância do jogo no Myra
+            MyraEnvironment.Game = this;
+
+            // Inicializa a interface de usuário
+            _userInterface = new UserInterface();
+            _userInterface.SetGame(this); // Agora o MyraEnvironment.Game foi definido
+
             // Carrega o conteúdo do MapRenderer
             mapRenderer.LoadContent(GraphicsDevice);
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -78,6 +98,8 @@ namespace Serenity
                 return;
             }
 
+            // Atualiza a interface de usuário
+            _userInterface.Update();
 
             /*
              * The code below is used to control the camera with the mouse and zoom with the mouse wheel.
@@ -111,6 +133,7 @@ namespace Serenity
             camera.Update();
             // Fim do código de controle da câmera
 
+
             base.Update(gameTime);
         }
 
@@ -118,12 +141,19 @@ namespace Serenity
         {
             GraphicsDevice.Clear(Color.Black);
 
+
+
+
             // Atualiza a viewport caso tenha sido alterada
             var viewport = GraphicsDevice.Viewport;
             spriteBatch.GraphicsDevice.Viewport = viewport;
 
             // Desenha o mapa
             mapRenderer.Draw(spriteBatch, camera);
+
+            // Desenha a interface de usuário
+            _userInterface.Render();
+
 
             base.Draw(gameTime);
         }
