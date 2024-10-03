@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra;
+using Serenity.UI;
 using System;
+
 
 namespace Serenity
 {
@@ -21,6 +24,9 @@ namespace Serenity
         float previousScrollValue;
 
 
+        private UserInterface _userInterface;
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -31,12 +37,18 @@ namespace Serenity
 
         protected override void Initialize()
         {
+            graphics.PreferredBackBufferWidth = 800;  // Largura
+            graphics.PreferredBackBufferHeight = 600; // Altura
+            graphics.ApplyChanges();
+
             // Inicializa a câmera
             camera = new Camera2D();
 
             // Gera o mapa
-            mapGenerator = new MapGenerator(2048,2048,random.Next());
-            Tile[,] tiles = mapGenerator.GenerateMap();
+            mapGenerator = new MapGenerator(1024,512,random.Next());
+            Tile[,] tiles = mapGenerator.GenerateMap(TerrainGenerationType.DistributedContinents);
+     
+
 
             // Inicializa o renderizador do mapa
             mapRenderer = new MapRenderer(tiles);
@@ -48,15 +60,30 @@ namespace Serenity
             Activated += OnActivated;
             Deactivated += OnDeactivated;
 
+
+            // Inicializa a interface de usuário
+            _userInterface = new UserInterface();
+            _userInterface.SetGame(this);
+
             base.Initialize();
         }
+
+
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // Defina a instância do jogo no Myra
+            MyraEnvironment.Game = this;
+
+            // Inicializa a interface de usuário
+            _userInterface = new UserInterface();
+            _userInterface.SetGame(this); // Agora o MyraEnvironment.Game foi definido
+
             // Carrega o conteúdo do MapRenderer
             mapRenderer.LoadContent(GraphicsDevice);
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -71,6 +98,8 @@ namespace Serenity
                 return;
             }
 
+            // Atualiza a interface de usuário
+            _userInterface.Update();
 
             /*
              * The code below is used to control the camera with the mouse and zoom with the mouse wheel.
@@ -97,12 +126,13 @@ namespace Serenity
             if (scrollValue != previousScrollValue)
             {
                 camera.Zoom += (scrollValue - previousScrollValue) * 0.001f;
-                camera.Zoom = MathHelper.Clamp(camera.Zoom, 0.06f, 2f);
+                camera.Zoom = MathHelper.Clamp(camera.Zoom, 0.02f, 2f);
                 previousScrollValue = scrollValue;
             }
 
             camera.Update();
             // Fim do código de controle da câmera
+
 
             base.Update(gameTime);
         }
@@ -111,12 +141,19 @@ namespace Serenity
         {
             GraphicsDevice.Clear(Color.Black);
 
+
+
+
             // Atualiza a viewport caso tenha sido alterada
             var viewport = GraphicsDevice.Viewport;
             spriteBatch.GraphicsDevice.Viewport = viewport;
 
             // Desenha o mapa
             mapRenderer.Draw(spriteBatch, camera);
+
+            // Desenha a interface de usuário
+            _userInterface.Render();
+
 
             base.Draw(gameTime);
         }

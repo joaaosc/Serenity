@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35208.52
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serenity", "Serenity.csproj", "{BDBB2E42-2D18-4A4A-9CAA-B70CDBAEE25A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serenity", "Serenity.csproj", "{BDBB2E42-2D18-4A4A-9CAA-B70CDBAEE25A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A52D5151-9198-431B-8E02-D44B9126E96A} = {A52D5151-9198-431B-8E02-D44B9126E96A}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serenity.UI", "..\SerenIty.UI\Serenity.UI.csproj", "{A52D5151-9198-431B-8E02-D44B9126E96A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{BDBB2E42-2D18-4A4A-9CAA-B70CDBAEE25A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDBB2E42-2D18-4A4A-9CAA-B70CDBAEE25A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDBB2E42-2D18-4A4A-9CAA-B70CDBAEE25A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A52D5151-9198-431B-8E02-D44B9126E96A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A52D5151-9198-431B-8E02-D44B9126E96A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A52D5151-9198-431B-8E02-D44B9126E96A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A52D5151-9198-431B-8E02-D44B9126E96A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
