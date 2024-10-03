@@ -1,0 +1,12 @@
+C:\Users\joao\source\repos\SerenIty.UI\bin\Debug\net8.0-windows\SerenIty.UI.deps.json
+C:\Users\joao\source\repos\SerenIty.UI\bin\Debug\net8.0-windows\SerenIty.UI.dll
+C:\Users\joao\source\repos\SerenIty.UI\bin\Debug\net8.0-windows\SerenIty.UI.pdb
+C:\Users\joao\source\repos\SerenIty.UI\obj\Debug\net8.0-windows\SerenIty.UI.csproj.AssemblyReference.cache
+C:\Users\joao\source\repos\SerenIty.UI\obj\Debug\net8.0-windows\SerenIty.UI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\joao\source\repos\SerenIty.UI\obj\Debug\net8.0-windows\SerenIty.UI.AssemblyInfoInputs.cache
+C:\Users\joao\source\repos\SerenIty.UI\obj\Debug\net8.0-windows\SerenIty.UI.AssemblyInfo.cs
+C:\Users\joao\source\repos\SerenIty.UI\obj\Debug\net8.0-windows\SerenIty.UI.csproj.CoreCompileInputs.cache
+C:\Users\joao\source\repos\SerenIty.UI\obj\Debug\net8.0-windows\SerenIty.UI.dll
+C:\Users\joao\source\repos\SerenIty.UI\obj\Debug\net8.0-windows\refint\SerenIty.UI.dll
+C:\Users\joao\source\repos\SerenIty.UI\obj\Debug\net8.0-windows\SerenIty.UI.pdb
+C:\Users\joao\source\repos\SerenIty.UI\obj\Debug\net8.0-windows\ref\SerenIty.UI.dll
