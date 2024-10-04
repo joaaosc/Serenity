@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using SharpDX.Direct3D9;
 
 public class MapRenderer
 {
@@ -10,20 +12,40 @@ public class MapRenderer
     private Texture2D landTexture;
     private Texture2D mountainTexture;
     private Texture2D riverTexture;
+    private Texture2D highlightTexture;
+    // Higlight effects
+    private float highlightAlpha = 0f;
+    private bool increasingAlpha = true;
 
     public MapRenderer(Tile[,] tiles)
     {
         this.tiles = tiles;
     }
 
-    public void LoadContent(GraphicsDevice graphicsDevice)
+    public Texture2D LoadContent(GraphicsDevice graphicsDevice)
     {
         // Cria texturas de cores sólidas para cada tipo de tile
         oceanTexture = CreateSolidTexture(graphicsDevice, Color.Blue);
         landTexture = CreateSolidTexture(graphicsDevice, Color.Green);
         mountainTexture = CreateSolidTexture(graphicsDevice, Color.Gray);
         riverTexture = CreateSolidTexture(graphicsDevice, Color.Cyan);
+        highlightTexture = CreateSolidTexture(graphicsDevice, Color.Transparent);
+
+        // Adiciona uma borda violeta ao highlightTexture
+        Texture2D texture = new Texture2D(graphicsDevice, tileSize, tileSize);
+        Color[] highlightData = new Color[tileSize * tileSize];
+        for (int i = 0; i < highlightData.Length; ++i) highlightData[i] = Color.Transparent;
+        for (int i = 0; i < tileSize; i++) // Cria uma borda violeta
+        {
+            highlightData[i] = Color.Red;
+            highlightData[i + tileSize * (tileSize - 1)] = Color.Red;
+            highlightData[i * tileSize] = Color.Red;
+            highlightData[i * tileSize + (tileSize - 1)] = Color.Red;
+        }
+        highlightTexture.SetData(highlightData);
+        return texture;
     }
+
 
     private Texture2D CreateSolidTexture(GraphicsDevice graphicsDevice, Color color)
     {
@@ -37,7 +59,12 @@ public class MapRenderer
 
     public void Draw(SpriteBatch spriteBatch, Camera2D camera)
     {
-        // Calcula os limites dos tiles visíveis na tela
+        DrawTiles(spriteBatch, camera);
+        DrawHighlightedTile(spriteBatch, camera);
+    }
+
+    private void DrawTiles(SpriteBatch spriteBatch, Camera2D camera)
+    {
         int startX = (int)(camera.Position.X / tileSize);
         int startY = (int)(camera.Position.Y / tileSize);
         int endX = startX + (int)(spriteBatch.GraphicsDevice.Viewport.Width / (tileSize * camera.Zoom)) + 2;
@@ -63,6 +90,24 @@ public class MapRenderer
         spriteBatch.End();
     }
 
+    private void DrawHighlightedTile(SpriteBatch spriteBatch, Camera2D camera)
+    {
+        MouseState mouseState = Mouse.GetState();
+        Vector2 mouseWorldPosition = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
+        int mouseTileX = (int)(mouseWorldPosition.X / tileSize);
+        int mouseTileY = (int)(mouseWorldPosition.Y / tileSize);
+
+        if (mouseTileX >= 0 && mouseTileY >= 0 && mouseTileX < tiles.GetLength(0) && mouseTileY < tiles.GetLength(1))
+        {
+            Vector2 highlightPosition = new Vector2(mouseTileX * tileSize, mouseTileY * tileSize);
+            Color highlightColor = new Color(1f, 1f, 1f, highlightAlpha); // Efeito de brilho
+
+            spriteBatch.Begin(transformMatrix: camera.Transform);
+            spriteBatch.Draw(highlightTexture, highlightPosition, highlightColor);
+            spriteBatch.End();
+        }
+    }
+
     private Texture2D GetTextureForTile(Tile tile)
     {
         switch (tile.Type)
@@ -79,4 +124,42 @@ public class MapRenderer
                 return landTexture;
         }
     }
+
+    public void Update(GameTime gameTime)
+    {
+        UpdateHighlightAlpha(gameTime);
+    }
+
+    public void SetTileType(int x, int y, TileType newType)
+    {
+        if (x >= 0 && x < tiles.GetLength(0) && y >= 0 && y < tiles.GetLength(1))
+        {
+            tiles[x, y].Type = newType;
+        }
+    }
+
+    private void UpdateHighlightAlpha(GameTime gameTime)
+    {
+        float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (increasingAlpha)
+        {
+            highlightAlpha += delta;
+            if (highlightAlpha >= 1f)
+            {
+                highlightAlpha = 1f;
+                increasingAlpha = false;
+            }
+        }
+        else
+        {
+            highlightAlpha -= delta;
+            if (highlightAlpha <= 0f)
+            {
+                highlightAlpha = 0f;
+                increasingAlpha = true;
+            }
+        }
+    }
+
 }

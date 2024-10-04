@@ -63,8 +63,8 @@ using SimplexNoise;
 
 public class MapGenerator
 {
-    private int width;          // Largura do mapa em tiles
-    private int height;         // Altura do mapa em tiles
+    public int width;          // Largura do mapa em tiles
+    public int height;         // Altura do mapa em tiles
     private Tile[,] tiles;      // Matriz bidimensional que armazena os tiles do mapa
     private Random random;      
     private int riverCount;     // Número de rios a serem gerados
@@ -489,6 +489,10 @@ public class MapGenerator
             }
         }
     }
+
+    public int GetWidth() { return this.width; }
+
+    public int GetHeight() { return this.height; }
 
 }
 

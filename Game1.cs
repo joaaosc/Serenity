@@ -2,8 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
+using Serenity.Input;
 using Serenity.UI;
 using System;
+using System.Windows.Forms;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 
 namespace Serenity
@@ -23,8 +27,10 @@ namespace Serenity
         Vector2 previousMousePosition;
         float previousScrollValue;
 
-
+        // UI
         private UserInterface _userInterface;
+        private InputManager _inputManager;
+
 
 
         public Game1()
@@ -47,7 +53,7 @@ namespace Serenity
             // Gera o mapa
             mapGenerator = new MapGenerator(1024,512,random.Next());
             Tile[,] tiles = mapGenerator.GenerateMap(TerrainGenerationType.DistributedContinents);
-     
+
 
 
             // Inicializa o renderizador do mapa
@@ -65,6 +71,14 @@ namespace Serenity
             _userInterface = new UserInterface();
             _userInterface.SetGame(this);
 
+
+
+            // Inicializa a interface de usuário com a ação do botão 1
+            _userInterface = new UserInterface();
+
+            MyraEnvironment.Game = this;
+
+
             base.Initialize();
         }
 
@@ -80,6 +94,12 @@ namespace Serenity
             // Inicializa a interface de usuário
             _userInterface = new UserInterface();
             _userInterface.SetGame(this); // Agora o MyraEnvironment.Game foi definido
+
+            // Carrega o conteúdo do MapRenderer
+            mapRenderer.LoadContent(GraphicsDevice);
+
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Carrega o conteúdo do MapRenderer
             mapRenderer.LoadContent(GraphicsDevice);
@@ -133,6 +153,11 @@ namespace Serenity
             camera.Update();
             // Fim do código de controle da câmera
 
+            // Atualiza a interface de usuário
+            _userInterface.Update();
+
+            // Atualiza o MapRenderer, se necessário
+            mapRenderer.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -140,9 +165,6 @@ namespace Serenity
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-
-
 
             // Atualiza a viewport caso tenha sido alterada
             var viewport = GraphicsDevice.Viewport;
